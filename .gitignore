@@ -1,3 +1,4 @@
 *.vtu
 *.o
 *.out
+*.csv

@@ -1,7 +1,9 @@
 #include <iostream>
 #include <vector>
 
+#ifndef PI
 #define PI 3.14159265358979323846
+#endif
 
 struct point{
     /* 
@@ -11,7 +13,7 @@ struct point{
     vertexes.
     */
     int index;
-    double x, y;
+    double x, y, r;
 };
 
 struct line{

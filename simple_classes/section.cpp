@@ -2,11 +2,12 @@
 
 Section::Section(){}
 
-void Section::setCenter(double x, double y){
+void Section::setCenter(double x, double y,double r){
     struct point center;
     center.index = -1; // Center does not needs a index; setting as -1
     center.x = x;
     center.y = y;
+    center.r = r;
     _center_ = center;
 }
 
