@@ -13,7 +13,7 @@ struct point{
     vertexes.
     */
     int index;
-    double x, y, r;
+    double x, y;
 };
 
 struct line{
@@ -41,6 +41,8 @@ class Section{
         std::vector<struct point> getBoundaryPoints();
         std::vector<struct line> getBoundaryLines();
         void printSectionProperties();
+     //sugestao   void plotDisplacedConfiguration(std::string filename, double x,double y, double r)
+     // x, y - nova coordenada do centro, r - rotacao do centro;
     private:
         struct point _center_;
         std::vector<struct point> _bpoints_; // b stands for boundary

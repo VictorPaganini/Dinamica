@@ -23,6 +23,7 @@ class Dynamical_problem{
         std::string getDataReport();
         void nextStep();
         void integrate(std::string csvOutputFile);
+        void readInputData(std::string inputFile);
 //        void setIntialAcelleration(); is this really necessary?
 /*      double ForceValue(std::string direction; double time)
         double setStiffness(std::string direction);
@@ -59,6 +60,7 @@ class Dynamical_problem{
         double _totalTime_; // Total time (s)
         int _timeSteps_; // Number of time steps
         int _currentTimeStep_; // (or cts)->  0 <= cts <= _timeSteps_
+        Section sec;
         /*
             Class attributes:
             * Initial values of:

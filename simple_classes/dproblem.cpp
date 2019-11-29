@@ -195,6 +195,7 @@ void Dynamical_problem::integrate(std::string csvOutputFile){
         ofile << _x_ << ";" << _y_ << ";" << _r_ << ";";
         ofile << _vx_ << ";" << _vy_ << ";" << _vr_ << ";";
         ofile << _ax_ << ";" << _ay_ << ";" << _ar_ << std::endl;
+        // chamar plotDisplaced (nome do arquivo baseado no currentTimestep)
     }
     ofile.close();
 }
