@@ -11,14 +11,14 @@ int main(){
     dprob.setForceParameters("x",1.0,1.0,2.0*PI);
     dprob.setForceParameters("y",1.0,1.0,2.0*PI);
     dprob.setForceParameters("r",1.0,1.0,1.0*PI);
-    dprob.setAlpha(0.5);
+    dprob.setGamma(0.5);
     dprob.setBeta(0.25);
     dprob.setTotalTime(3.0);
     dprob.setTimeSteps(1000);
     dprob.resetTime();
-    std::cout << dprob.getDataReport();
-    dprob.nextStep();
-    std::cout << dprob.getDataReport();
+    //std::cout << dprob.getDataReport();
+    //dprob.nextStep();
+    //std::cout << dprob.getDataReport();
     
     dprob.integrate("test.csv");
 

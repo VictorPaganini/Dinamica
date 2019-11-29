@@ -43,7 +43,7 @@ void Dynamical_problem::setForceParameters(std::string direction, double a, doub
     }
 }
 
-void Dynamical_problem::setAlpha(double gamma){
+void Dynamical_problem::setGamma(double gamma){
     _gamma_ = gamma;
 }
 

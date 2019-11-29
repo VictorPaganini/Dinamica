@@ -14,7 +14,7 @@ class Dynamical_problem{
         void setDumping(double cx, double cy, double cr);
         void setMass(double mass);
         void setForceParameters(std::string direction, double a, double b, double w);
-        void setAlpha(double gamma);
+        void setGamma(double gamma);
         void setBeta(double beta);
         void setTotalTime(double time);
         void setTimeSteps(int steps);
