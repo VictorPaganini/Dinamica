@@ -39,6 +39,51 @@ std::vector<struct line> Section::getBoundaryLines(){
     return _blines_;
 }
 
+void Section::readGeometryData(){
+
+    std::string geometry_file = "geometry_test.txt";
+    std::string line;
+
+    std::ifstream geometryData(geometry_file.c_str());
+  
+    getline(geometryData,line),getline(geometryData,line);
+
+    //General aspects
+    geometryData >> _numelem_ >> _numnodes_ ;
+
+    getline(geometryData,line),getline(geometryData,line);
+
+    //Nodal coordinates
+    for (int i=0; i<_numnodes_;i++){
+
+        double index, x, y;
+
+        geometryData >> index >> x >> y;
+        addBoundaryPoint(index,x,y);
+        getline(geometryData,line);
+
+    }
+
+    //Conectivity
+    for (int i=0; i<_numelem_;i++){
+
+        double index, firstpoint, lastpoint;
+
+        geometryData >> index >> firstpoint >> lastpoint;
+        addBoundaryLine(index,firstpoint,lastpoint);
+        getline(geometryData,line);
+
+    }
+    //Center coordinates
+    geometryData >> _center_.x >> _center_.y;
+
+    
+}
+
+
+
+
+
 void Section::printSectionProperties(){
     std::cout << "Section properties" << std::endl;
     std::cout << " - center at x = " << _center_.x;

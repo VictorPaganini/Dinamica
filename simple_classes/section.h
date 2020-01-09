@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <fstream>
+
 
 #ifndef PI
 #define PI 3.14159265358979323846
@@ -41,11 +43,15 @@ class Section{
         std::vector<struct point> getBoundaryPoints();
         std::vector<struct line> getBoundaryLines();
         void printSectionProperties();
+        void readGeometryData();
+
      //sugestao   void plotDisplacedConfiguration(std::string filename, double x,double y, double r)
      // x, y - nova coordenada do centro, r - rotacao do centro;
     private:
         struct point _center_;
         std::vector<struct point> _bpoints_; // b stands for boundary
         std::vector<struct line> _blines_;
+        int _numelem_; //Number of elements on inputfile
+        int _numnodes_; // Number of nodes on inputfile
         // _bpoints_ -> boundary points; _blines -> boundary lines
 };

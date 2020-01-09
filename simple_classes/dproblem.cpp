@@ -3,6 +3,7 @@
 
 Dynamical_problem::Dynamical_problem(){}
 
+
 void Dynamical_problem::setInitialPosition(double x, double y, double r){
     _x0_ = x;
     _y0_ = y;
@@ -200,109 +201,50 @@ void Dynamical_problem::integrate(std::string csvOutputFile){
     ofile.close();
 }
 
-// Verified up to this points
+void Dynamical_problem::readInputData(){
 
-/*
-
-double Dynamical_problem::ForceValue(std::string direction, double time){
-    struct force cforce = getForce(direction);
-    double fvalue = cforce.a + cforce.b*sin(cforce.w*time);
-    return fvalue;
-}
-
-struct force Dynamical_problem::getForce(std:: string direction){
-    if (direction == "x"){
-        return _fx_;
-    }
-    else if (direction == "y"){
-        return _fy_;
-    }
-    else if (direction == "r"){
-        return _mz_;
-    }
-
-}
-
-void Dynamical_problem::getInitialAcelleration(std::string direction){}
-
-void Dynamical_problem::getNewRotation(){}
-
-void Dynamical_problem::getInitialAcceleration(){
-    _a0x_ = (1.0/_m_)*(-_kx_*_center_.x-_cx_*_v0x_+_fx_);
-    _a0y_ = (1.0/_m_)*(-_ky_*_center_.y-_cy_*_v0y_+_fy_);
-    _a0z_ = (1.0/_m_)*(-_kr_*_center_.r-_cr_*_v0r_+_mz_);
-}
-
-void Dynamical_problem::getPreviousVelocity(std::string direction){}
-
-    if time = 0 
-        v i-1 = v0x 
-
-    if t =/ 0
-
-
-
-
-void Dynamical_problem::getPreviousAcceleration(){}
-
-struct point Dynamical_problem::getNewCenterCoordinates(double time){
-
-       //New X coordinates
-       //Check Time
-        if (time == 0.){
-            double vx = _v0x_;
-            double ax = _a0x_;
-            double ay = _a0y_;
-            double vy = _v0y_;
-        }
-
-        else{
-
-            double vx = getPreviousVelocity("x",steps);
-            double ax = getPreviousAcceleration("x",steps);
-            double vy = getPreviousVelocity("y",steps);
-            double ay = getPreviousAcceleration("y",steps);
-
-        }  
-
-        //Current force
-        double cfx = ForceValue("x", time);
-        double cfy = ForceValue("y", time);
-        double cfz = ForceValue("z", time);
-
-        //Numeric method
-        struct point currentcenter;
     
-        currentcenter.x = (cfx+((1./_beta_)*(_m_/(_timeSteps_*_timeSteps_))+
-        (_gama_/_beta_)*(_cx_/_timeSteps_))*_center_.x+((1./_beta_)*(_m_/_timeSteps_)+
-        ((_gama_/_beta_)-1.)*_cx_)*vx+((1./(2.*_beta_)-1.)*_m_+
-        (_gama_/(2.*_beta_)-1.)*__cx__*_timeSteps_)*ax)
-        /((1./_beta_)*(_m_/(_timeSteps_*_timeSteps_))+_kx_+
-        (_gama_/_beta_)*(_cx_/_timeSteps_)); 
+    std::string input_file = "input_file.txt";
+    std::string line;
 
-        //New Y coordinates
+    std::ifstream inputData(input_file.c_str());
+    
+    getline(inputData,line),getline(inputData,line),getline(inputData,line);
+    
+    //General aspects (CHECK)
+    inputData >>  _totalTime_ ;
+    
+    getline(inputData,line);getline(inputData,line);getline(inputData,line);
 
-        currentcenter.y = (cfy+((1./_beta_)*(_m_/(_timeSteps_*_timeSteps_))+
-        (_gama_/_beta_)*(_cy_/_timeSteps_))*_center_.y+((1./_beta_)*(_m_/_timeSteps_)+
-        ((_gama_/_beta_)-1.)*_cy_)*vy+((1./(2.*_beta_)-1.)*_m_+
-        (_gama_/(2.*_beta_)-1.)*_cy_*_timeSteps_)*ay)
-        /((1./_beta_)*(_m_/(_timeSteps_*_timeSteps_))+_ky_+
-        (_gama_/_beta_)*(_cy_/_timeSteps_));
+    //Initial conditions
+    inputData >> _vx0_ >> _vy0_ >> _vr0_;
 
-        //New Rotation
-        currentcenter.r = (cfz+((1./_beta_)*(_m_/(_timeSteps_*_timeSteps_))+
-        (_gama_/_beta_)*(_cr_/_timeSteps_))*_center_.r+((1./_beta_)*(_m_/_timeSteps_)+
-        ((_gama_/_beta_)-1.)*_cr_)*vr+((1./(2.*_beta_)-1.)*_m_+
-        (_gama_/(2.*_beta_)-1.)*_cr_*_timeSteps_)*ar)
-        /((1./_beta_)*(_m_/(_timeSteps_*_timeSteps_))+_kr_+
-        (_gama_/_beta_)*(_cr_/_timeSteps_));
+    getline(inputData,line);getline(inputData,line);getline(inputData,line);
+    getline(inputData,line);
 
+    inputData >> _x0_ >> _y0_ >> _r0_ ;
+
+    getline(inputData,line);getline(inputData,line);getline(inputData,line);
+    getline(inputData,line);getline(inputData,line);
+
+    //Crossection properties
+    inputData >> _m_ >> _kx_ >> _ky_ >> _kr_ >> _cx_ >> _cy_ >> _cr_;
+
+    getline(inputData,line);getline(inputData,line);getline(inputData,line);
+    getline(inputData,line);
+
+    //Numerical method
+    inputData >> _timeSteps_ >> _gamma_ >> _beta_;
+
+    getline(inputData,line);getline(inputData,line);getline(inputData,line);
+    getline(inputData,line);getline(inputData,line);getline(inputData,line);  
+
+    //Checking values on terminal
+    std::cout << "Total Time: " << _totalTime_ << std::endl;
+    std::cout << "Initial velocities: "<< _vx0_ << " " << _vy0_ << " " << _vr0_ << std::endl;
+    std::cout << "Initial displacement: "<< _x0_ << " " << _y0_ << " " << _r0_ << std::endl;
+    std::cout << "Mass and Stiffness: "<< _m_ << " and " << _kx_ << " " << _ky_ << " "<< _kr_ << std::endl;
+    std::cout << "Dumping: "<< _cx_ << " " << _cy_ << " " << _cr_ << std::endl;
+    std::cout << "Numerical Method: "<< _timeSteps_ << " " << _gamma_ << " " << _beta_ << std::endl;
+    
 }
-
-double Dynamical_problem::getTotalTime(int steps){
-
-    double TotalTime = steps*_timeSteps_;
-    return TotalTime;
-
-}
-*/

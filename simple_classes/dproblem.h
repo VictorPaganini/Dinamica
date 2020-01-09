@@ -5,9 +5,11 @@
 #include "section.h"
 #include "force.h"
 
+
 class Dynamical_problem{
     public:
         Dynamical_problem();
+        
         void setInitialPosition(double x, double y, double r);
         void setInitialVelocities(double vx, double vy, double vr);
         void setStiffness(double kx, double ky, double kr);
@@ -23,23 +25,8 @@ class Dynamical_problem{
         std::string getDataReport();
         void nextStep();
         void integrate(std::string csvOutputFile);
-        void readInputData(std::string inputFile);
-//        void setIntialAcelleration(); is this really necessary?
-/*      double ForceValue(std::string direction; double time)
-        double setStiffness(std::string direction);
-        double setDumping(std::string direction);
-        double getDisplacement(std::string direction);
-        double getVelocity(std::string direction);
-        double getAcceleration(std::string direction);
-        double getMass();
-        Force getForce(std::string direction);
-        double getAlpha();
-        double getBeta();
-        double getTotalTime(int steps);
-        double getTimeSteps();
-        struct point Dynamical_problem::getNewCenterCoordinates(){
-        void integrate(std::string outputFile);
-*/
+        void readInputData();
+
     private:
         // Initial position, velocity and acceleration 
         double _x0_, _y0_, _r0_;
@@ -60,6 +47,8 @@ class Dynamical_problem{
         double _totalTime_; // Total time (s)
         int _timeSteps_; // Number of time steps
         int _currentTimeStep_; // (or cts)->  0 <= cts <= _timeSteps_
+        int numElem; //Number of elements on inputfile
+        int numNodes; // Number of nodes on inputfile
         Section sec;
         /*
             Class attributes:
