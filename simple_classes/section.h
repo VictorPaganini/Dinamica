@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <cmath>
+#include "sstream"
 
 
 #ifndef PI
@@ -15,7 +17,7 @@ struct point{
     vertexes.
     */
     int index;
-    double x, y;
+    double x, y, radius, slope;
 };
 
 struct line{
@@ -44,6 +46,16 @@ class Section{
         std::vector<struct line> getBoundaryLines();
         void printSectionProperties();
         void readGeometryData();
+        void printPointProperties(int index);
+        void getPointRadius(int index);
+        void getPointSlope(int index);
+        void getPointCoordinates(int index, double currentX, double currentY, double currentRotation);
+        void getAllPointsCoordinates(double currentX, double currentY, double currentRotation);
+        double getNumberofPoints();
+        double getNumberofElements();
+        std::string ParaviewPointCoordinates(int index);
+        std::string ParaviewBoundaryLine(int index);
+
 
      //sugestao   void plotDisplacedConfiguration(std::string filename, double x,double y, double r)
      // x, y - nova coordenada do centro, r - rotacao do centro;

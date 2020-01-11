@@ -23,9 +23,10 @@ class Dynamical_problem{
         void resetTime();
         void computeInitialAcceleration();
         std::string getDataReport();
-        void nextStep();
-        void integrate(std::string csvOutputFile);
+        void nextStep(Section sec);
+        void integrate(std::string csvOutputFile,Section sec);
         void readInputData();
+        void paraview(Section sec);
 
     private:
         // Initial position, velocity and acceleration 

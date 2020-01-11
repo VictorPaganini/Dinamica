@@ -129,7 +129,7 @@ std::string Dynamical_problem::getDataReport(){
     return ss.str();
 }
 
-void Dynamical_problem::nextStep(){
+void Dynamical_problem::nextStep(Section sec){
     /*
     Advances one step in the time integration and computes
     the news values of current position, velocity and acceleration.
@@ -182,16 +182,20 @@ void Dynamical_problem::nextStep(){
           +(1.0-(gm/(2.0*bt)))*dt*par;
 
     _ar_ = (mr - _kr_*_r_-_cr_*_vr_)/_m_;
-
+    
+    sec.getAllPointsCoordinates(_x_,_y_,_r_);
+    sec.setCenter(_x_,_y_);
+    //sec.printSectionProperties();
+    paraview(sec);
 }
 
-void Dynamical_problem::integrate(std::string csvOutputFile){
+void Dynamical_problem::integrate(std::string csvOutputFile,Section sec){
     std::ofstream ofile;
     ofile.open(csvOutputFile.c_str(),std::ofstream::out);
     ofile << "step;x;y;r;vx;vy;vr;ax;ay;ar" << std::endl;
     resetTime();
     while (_currentTimeStep_<_timeSteps_){
-        nextStep();
+        nextStep(sec);
         ofile << _currentTimeStep_ << ";";
         ofile << _x_ << ";" << _y_ << ";" << _r_ << ";";
         ofile << _vx_ << ";" << _vy_ << ";" << _vr_ << ";";
@@ -200,6 +204,118 @@ void Dynamical_problem::integrate(std::string csvOutputFile){
     }
     ofile.close();
 }
+
+
+
+void Dynamical_problem::paraview(Section sec){
+        double numpoints = sec.getNumberofPoints();
+        double numelem = sec.getNumberofElements();
+
+        std::string result;
+        std::ostringstream convert;
+
+        convert << _currentTimeStep_ + 10000000;
+
+        result = convert.str();
+        std::string s = "crossSection"+result+".vtu";
+    
+        std::fstream output_v(s.c_str(), std::ios_base::out);
+
+        output_v << "<?xml version=\"1.0\"?>" << std :: endl
+                << "<VTKFile type=\"UnstructuredGrid\">" << std :: endl
+                << "  <UnstructuredGrid>" << std :: endl
+                << "  <Piece NumberOfPoints=\"" << numpoints
+                << "\"  NumberOfCells=\"" << numelem
+                << "\">" << std :: endl;
+
+    // write nodal coordinates
+        output_v << "    <Points>" << std :: endl
+           << "      <DataArray type=\"Float64\" "
+           << "NumberOfComponents=\"3\" format=\"ascii\">" << std :: endl;
+
+            for (int i=0; i<numpoints; i++){
+            output_v << sec.ParaviewPointCoordinates(i);
+
+            };            
+
+        output_v << "      </DataArray>" << std :: endl
+               << "    </Points>" << std :: endl;
+
+        // write element connectivity
+        output_v << "    <Cells>" << std :: endl
+           << "      <DataArray type=\"Int32\" "
+           << "Name=\"connectivity\" format=\"ascii\">" << std :: endl;
+    
+            for (int i=0; i<numelem; i++){
+            output_v << sec.ParaviewBoundaryLine(i);
+
+            };
+                
+        output_v << "      </DataArray>" << std :: endl;
+  
+        // write offsets in the data array
+        output_v << "      <DataArray type=\"Int32\""
+           << " Name=\"offsets\" format=\"ascii\">" << std :: endl;
+
+        int aux = 0;
+        for (int i=0; i<numelem; i++){
+            output_v << aux + 2 << std::endl;
+            aux += 2;
+        };
+        output_v << "      </DataArray>" << std :: endl;
+  
+        // write element types
+        output_v << "      <DataArray type=\"UInt8\" Name=\"types\" "
+               << "format=\"ascii\">" << std :: endl;
+    
+        for (int  i=0; i<numelem; i++){
+            output_v << 4 << std::endl;
+        };
+
+        output_v << "      </DataArray>" << std :: endl
+               << "    </Cells>" << std :: endl;
+
+
+//     //Write point results
+//     output_v << "    <PointData>" << std :: endl;
+//     output_v << "      <DataArray type=\"Float64\" NumberOfComponents=\"3\" "
+// 	 << "Name=\"Velocity\" format=\"ascii\">" << std :: endl;
+//     for (int i=0; i<numNodes; i++){
+//         output_v << nodes_[i] -> getVelocity(0) << " "          \
+//                  << nodes_[i] -> getVelocity(1) << " " << 0.0 << std::endl;
+//     };
+//     output_v << "      </DataArray> " << std::endl;
+
+//    //  output_v << "      <DataArray type=\"Float64\" NumberOfComponents=\"3\" "
+// 	 // << "Name=\"Stress\" format=\"ascii\">" << std :: endl;
+//    //  for (int i=0; i<Nnos; i++){
+//    //      output_v << 0.0 << " " << 0.0 << " " << 0.0 << endl;
+//    //  };
+    
+//    //  output_v << "      </DataArray> " << std::endl;
+
+//     output_v << "    </PointData>" << std :: endl; 
+
+//     //Write cell results
+//     output_v << "    <CellData>" << std :: endl;
+
+//     output_v << "      <DataArray type=\"Float64\" NumberOfComponents=\"1\" "
+// 	 << "Name=\"Process\" format=\"ascii\">" << std :: endl;
+//     for (int i=0; i<numElem; i++){
+//         output_v << part_elem[i] << std::endl;
+//     };
+    
+//     output_v << "      </DataArray> " << std::endl;
+//     output_v << "    </CellData>" << std :: endl; 
+
+    // finalise
+
+    output_v << "  </Piece>" << std :: endl
+           << "  </UnstructuredGrid>" << std :: endl
+           << "</VTKFile>" << std :: endl;
+    
+}
+
 
 void Dynamical_problem::readInputData(){
 
@@ -248,3 +364,5 @@ void Dynamical_problem::readInputData(){
     std::cout << "Numerical Method: "<< _timeSteps_ << " " << _gamma_ << " " << _beta_ << std::endl;
     
 }
+
+
